@@ -1,19 +1,15 @@
 import '@vaadin/vaadin-grid';
 import { GridDataProviderCallback, GridDataProviderParams } from '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column';
-import Person from 'Frontend/generated/com/example/application/data/entity/Person';
 import * as PersonEndpoint from 'Frontend/generated/PersonEndpoint';
 import { customElement, html, state } from 'lit-element';
 import { View } from '../view';
 
 @customElement('people-view')
 export class PeopleView extends View {
-  @state()
-  people: Person[] = [];
-
   render() {
     return html`
-      <vaadin-grid class="w-full h-full" theme="no-border" .items=${this.people}>
+      <vaadin-grid class="w-full h-full" theme="no-border" .dataProvider=${this.dataProvider}>
         <vaadin-grid-column auto-width path="firstName"></vaadin-grid-column>
         <vaadin-grid-column auto-width path="lastName"></vaadin-grid-column>
         <vaadin-grid-column auto-width path="email"></vaadin-grid-column>
@@ -22,9 +18,14 @@ export class PeopleView extends View {
     `;
   }
 
+  async dataProvider(params: GridDataProviderParams, callback: GridDataProviderCallback) {
+    const page = await PersonEndpoint.getPage(params.page, params.pageSize);
+
+    callback(page.content, page.size);
+  }
+
   async connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'flex-col', 'h-full');
-    this.people = await PersonEndpoint.listAll();
   }
 }
