@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Vaadin project from https://start.vaadin.com/project/9fcda522-62e2-4e69-b29b-896954a052f2 -->
+    <!-- Project from https://start.vaadin.com/ -->
     <groupId>com.example.application</groupId>
-    <artifactId>gridpaging</artifactId>
-    <name>Project base for Spring Boot and Vaadin Flow</name>
+    <artifactId>hilla-grid-paging</artifactId>
+    <name>hilla-grid-paging</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>11</java.version>
-        <vaadin.version>20.0.7</vaadin.version>
+        <java.version>17</java.version>
+        <hilla.version>1.2.3</hilla.version>
+        <!-- this parameter is needed as spring-boot bom overwrites it -->
+        <selenium.version>4.4.0</selenium.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.7.3</version>
     </parent>
 
     <repositories>
@@ -30,6 +31,12 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>
+                https://maven.vaadin.com/vaadin-prereleases/
+            </url>
         </repository>
         <!-- Repository used by many Vaadin add-ons -->
         <repository>
@@ -50,14 +57,20 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>
+                https://maven.vaadin.com/vaadin-prereleases/
+            </url>
+        </pluginRepository>
     </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-bom</artifactId>
-                <version>${vaadin.version}</version>
+                <groupId>dev.hilla</groupId>
+                <artifactId>hilla-bom</artifactId>
+                <version>${hilla.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -66,39 +79,29 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.vaadin</groupId>
-            <!-- Replace artifactId with vaadin-core to use only free components -->
-            <artifactId>vaadin</artifactId>
+            <groupId>dev.hilla</groupId>
+            <artifactId>hilla</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-spring-boot-starter</artifactId>
+            <groupId>dev.hilla</groupId>
+            <artifactId>hilla-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.vaadin.artur</groupId>
-            <artifactId>a-vaadin-helper</artifactId>
-            <version>1.7.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>exampledata</artifactId>
-            <version>4.0.0</version>
+            <version>4.2.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,7 +133,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>4.4.0</version>
+            <version>5.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -144,6 +147,7 @@
                 <!-- Clean build and startup time for Vaadin apps sometimes may exceed
                      the default Spring Boot's 30sec timeout.  -->
                 <configuration>
+                    <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5757</jvmArguments>
                     <wait>500</wait>
                     <maxAttempts>240</maxAttempts>
                 </configuration>
@@ -155,9 +159,9 @@
                 It also creates webpack.config.js if not exists yet.
             -->
             <plugin>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.version}</version>
+                <groupId>dev.hilla</groupId>
+                <artifactId>hilla-maven-plugin</artifactId>
+                <version>${hilla.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -176,9 +180,9 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
-                        <version>${vaadin.version}</version>
+                        <groupId>dev.hilla</groupId>
+                        <artifactId>hilla-maven-plugin</artifactId>
+                        <version>${hilla.version}</version>
                         <executions>
                             <execution>
                                 <goals>

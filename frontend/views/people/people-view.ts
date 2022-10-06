@@ -1,8 +1,10 @@
-import '@vaadin/vaadin-grid';
-import { GridDataProviderCallback, GridDataProviderParams } from '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-column';
+import '@vaadin/grid';
+import { GridDataProviderCallback, GridDataProviderParams } from '@vaadin/grid/vaadin-grid';
+import '@vaadin/grid/vaadin-grid-column';
+import Person from 'Frontend/generated/com/example/application/data/entity/Person';
 import * as PersonEndpoint from 'Frontend/generated/PersonEndpoint';
-import { customElement, html, state } from 'lit-element';
+import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { View } from '../view';
 
 @customElement('people-view')
@@ -18,10 +20,9 @@ export class PeopleView extends View {
     `;
   }
 
-  async dataProvider(params: GridDataProviderParams, callback: GridDataProviderCallback) {
+  async dataProvider(params: GridDataProviderParams<Person>, callback: GridDataProviderCallback<Person>) {
     const page = await PersonEndpoint.getPage(params.page, params.pageSize);
-
-    callback(page.content, page.size);
+    if (page) callback(page.content, page.size);
   }
 
   async connectedCallback() {
