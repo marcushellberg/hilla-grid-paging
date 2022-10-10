@@ -6,7 +6,6 @@ import com.example.application.data.entity.Person;
 import com.example.application.data.service.PersonRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
-import dev.hilla.Nonnull;
 
 @Endpoint
 @AnonymousAllowed
@@ -17,16 +16,7 @@ public class PersonEndpoint {
     this.repo = repo;
   }
 
-  static class PageResponse {
-    @Nonnull
-    public List<@Nonnull Person> content;
-    @Nonnull
-    public long size;
-
-    PageResponse(List<Person> content, long size) {
-      this.content = content;
-      this.size = size;
-    }
+  static record PageResponse(List<Person> content, long size) {
   }
 
   public PageResponse getPage(int page, int size) {

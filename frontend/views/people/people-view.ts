@@ -11,7 +11,7 @@ import { View } from '../view';
 export class PeopleView extends View {
   render() {
     return html`
-      <vaadin-grid class="w-full h-full" theme="no-border" .dataProvider=${this.dataProvider}>
+      <vaadin-grid class="w-full h-full" .dataProvider=${this.dataProvider}>
         <vaadin-grid-column auto-width path="firstName"></vaadin-grid-column>
         <vaadin-grid-column auto-width path="lastName"></vaadin-grid-column>
         <vaadin-grid-column auto-width path="email"></vaadin-grid-column>
